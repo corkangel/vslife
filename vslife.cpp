@@ -13,7 +13,7 @@ int main()
     glfwMakeContextCurrent(window);
     glewInit();
 
-    const unsigned int gridSize = 100;
+    const unsigned int gridSize = 2000;
 
     Renderer renderer(gridSize);
     renderer.Initialize();
@@ -50,6 +50,8 @@ int main()
         {
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
 		}
+
+        renderer.HandleKeyInput(window);
     }
 
     renderer.Cleanup();

@@ -6,17 +6,22 @@
 #include <chrono>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 const char* vertexShaderSource = R"glsl(
 #version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in float aColor;
 
+uniform mat4 transform;
+
 out float ourColor; // Output to the fragment shader
 
 void main()
 {
-    gl_Position = vec4(aPos, 1.0);
+    gl_Position = transform * vec4(aPos, 1.0);
     ourColor = aColor; // Pass the color to the fragment shader
 }
 )glsl";
@@ -47,8 +52,35 @@ public:
     std::vector<GLuint> indices;
     std::vector<GLfloat> colors;
 
+    glm::mat4 cameraTransform;
+
     Renderer(unsigned int sz) : gridSize(sz)
     {
+        cameraTransform = glm::mat4(1.0f);
+    }
+
+    void HandleKeyInput(GLFWwindow* window)
+    {
+        // Check if the '+' key is pressed
+        if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
+        {
+            // Zoom in by scaling the camera transform
+            cameraTransform = glm::scale(cameraTransform, glm::vec3(1.1f, 1.1f, 1.1f));
+        }
+
+        // Check if the '-' key is pressed
+        if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
+        {
+            // Zoom out by scaling the camera transform
+            cameraTransform = glm::scale(cameraTransform, glm::vec3(0.9f, 0.9f, 0.9f));
+        }
+    }
+
+    void ApplyCameraTransform()
+    {
+        // Apply the camera transform to the shader program
+        GLuint transformLoc = glGetUniformLocation(shaderProgram, "transform");
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(cameraTransform));
     }
 
     GLuint MakeShaderProgram(const char* vertexShaderSource, const char* fragmentShaderSource)
@@ -131,6 +163,8 @@ public:
 
     void Draw()
     {
+        ApplyCameraTransform();
+
         glBindBuffer(GL_ARRAY_BUFFER, VBOcolors);
         glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLfloat), &colors[0], GL_DYNAMIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
