@@ -16,6 +16,7 @@ public:
     std::vector<unsigned char> neighborCounts;
     std::vector<unsigned int> dirtyPlus;
     std::vector<unsigned int> dirtyMinus;
+    std::vector<char> dirtyCells;
     const unsigned int gridSize;
 
     Board(unsigned int size) : gridSize(size)
@@ -25,6 +26,7 @@ public:
         neighborCounts.resize(gridSize * gridSize, 0);
         dirtyPlus.reserve(gridSize * gridSize);
         dirtyMinus.reserve(gridSize * gridSize);
+        dirtyCells.resize(gridSize * gridSize);
 
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -35,7 +37,14 @@ public:
         }
         memcpy(&tmp[0], &cells[0], gridSize * gridSize * sizeof(unsigned char));
 
-        CountNeighbors();
+        //CountNeighbors();
+
+        board_init(&cells[0], gridSize);
+    }
+
+    ~Board()
+    {
+        board_destroy();
     }
 
     void CountNeighbors()
@@ -164,7 +173,7 @@ public:
         memcpy(&cells[0], &tmp[0], gridSize * gridSize * sizeof(unsigned char));
 	}
 
-    void Update()
+    void UpdateK1()
     {
         dirtyPlus.clear();
         dirtyMinus.clear();
@@ -195,7 +204,7 @@ public:
         UpdateNeighbors(dirtyMinus, -1);
     }
 
-    void Draw(std::vector<GLfloat>& colors)
+    void DrawK1(std::vector<GLfloat>& colors)
     {
         for (unsigned int index : dirtyPlus)
         {
@@ -213,6 +222,24 @@ public:
             colors[pos + 2] = 0.0f;
             colors[pos + 3] = 0.0f;
         }
+    }
+
+    void Update(std::vector<GLfloat>& colors)
+    {
+        board_update(&dirtyCells[0]);
+
+        for (unsigned int n = 0; n < gridSize * gridSize; ++n)
+		{
+			if (dirtyCells[n] == 0)
+				continue;
+
+            const unsigned int pos = n * 4;
+            GLfloat value = (dirtyCells[n] == 1) ? 1.0f : 0.0f;
+            colors[pos] = value;
+            colors[pos + 1] = value;
+            colors[pos + 2] = value;
+            colors[pos + 3] = value;
+		}
     }
 };
 

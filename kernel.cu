@@ -63,7 +63,7 @@ void update_board(const unsigned char* cells, unsigned char* new_cells, const un
     cudaMemcpy(d_new_cells, new_cells, boardSize * boardSize * sizeof(unsigned char), cudaMemcpyHostToDevice);
 
     dim3 blockSize(16, 16);
-    dim3 gridSize(boardSize / 16 + 1, boardSize / 16 + 1);
+    dim3 gridSize(boardSize / 8 + 1, boardSize / 8 + 1);
 
     update_board_kernel << <gridSize, blockSize >> > (d_cells, d_new_cells, boardSize);
 

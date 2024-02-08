@@ -80,7 +80,7 @@ public:
     {
         shaderProgram = MakeShaderProgram(vertexShaderSource, fragmentShaderSource);
 
-        const float sz = 0.001f;
+        const float sz = 0.01f;
         const float half = gridSize * sz / 2;
         for (int i = 0; i < gridSize; ++i) {
             for (int j = 0; j < gridSize; ++j) {

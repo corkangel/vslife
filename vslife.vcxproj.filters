@@ -34,5 +34,8 @@
     <CudaCompile Include="kernel.cu">
       <Filter>Source Files</Filter>
     </CudaCompile>
+    <CudaCompile Include="ongpu.cu">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>
