@@ -100,7 +100,7 @@ public:
                     });
 
                 // Generate color for each square (all vertices of a square have the same color)
-                colors.insert(colors.end(), 4, GLfloat((i + j) % 2));
+                colors.insert(colors.end(), 4, 0.0f);
             }
         }
 

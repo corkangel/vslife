@@ -29,6 +29,8 @@ int main()
         auto start = std::chrono::high_resolution_clock::now();
 
         board.Update(renderer.colors);
+        //board.UpdateOld();
+        //board.DrawOld(renderer.colors);
 
         frameTimes[frameCount % numFrames] = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(std::chrono::high_resolution_clock::now() - start).count();
         if (frameCount++ % 50 == 0)

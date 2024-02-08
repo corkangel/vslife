@@ -42,10 +42,6 @@ __global__ void board_update_cell(unsigned char* cells, unsigned char* cells2, c
 			cells2[index] = 0;
 			dirty[index] = -1;
 		}
-		else
-		{
-			cells2[index] = 1;
-		}
 	}
 	else
 	{
@@ -53,10 +49,6 @@ __global__ void board_update_cell(unsigned char* cells, unsigned char* cells2, c
 		{
 			cells2[index] = 1;
 			dirty[index] = 1;
-		}
-		else
-		{
-			cells2[index] = 0;
 		}
 	}
 }
