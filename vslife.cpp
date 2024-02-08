@@ -6,34 +6,14 @@
 
 #include "kernel.cuh"
 
-
-void cuda()
-{
-    // Initialize arrays A, B, and C.
-    double A[3], B[3], C[3];
-
-    // Populate arrays A and B.
-    A[0] = 5; A[1] = 8; A[2] = 3;
-    B[0] = 7; B[1] = 6; B[2] = 4;
-
-    // Sum array elements across ( C[0] = A[0] + B[0] ) into array C using CUDA.
-    kernel(A, B, C, 3);
-
-    printf("C[0] = %f\n", C[0]);
-    printf("C[1] = %f\n", C[1]);
-    printf("C[2] = %f\n", C[2]);
-}
-
 int main()
 {
-    cuda();
-
     glfwInit();
     GLFWwindow* window = glfwCreateWindow(1600, 1600, "Life", NULL, NULL);
     glfwMakeContextCurrent(window);
     glewInit();
 
-    const unsigned int gridSize = 2000;
+    const unsigned int gridSize = 64;
 
     Renderer renderer(gridSize);
     renderer.Initialize();
