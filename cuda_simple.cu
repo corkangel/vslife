@@ -5,52 +5,52 @@
 
 __global__ void update_board_kernel(const unsigned char* cells, unsigned char* new_cells, const unsigned int boardSize)
 {
-	int i = blockIdx.x * blockDim.x + threadIdx.x;
-	int j = blockIdx.y * blockDim.y + threadIdx.y;
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int j = blockIdx.y * blockDim.y + threadIdx.y;
 
     if (i < boardSize && j < boardSize)
     {
-		int count = 0;
+        int count = 0;
         for (int di = -1; di <= 1; ++di)
         {
             for (int dj = -1; dj <= 1; ++dj)
             {
-				if (di == 0 && dj == 0)
-					continue;
+                if (di == 0 && dj == 0)
+                    continue;
 
-				int ni = i + di;
-				int nj = j + dj;
+                int ni = i + di;
+                int nj = j + dj;
 
                 if (ni >= 0 && ni < boardSize && nj >= 0 && nj < boardSize && cells[ni * boardSize + nj] == 1)
                 {
-					count++;
-				}
-			}
-		}
+                    count++;
+                }
+            }
+        }
 
         if (cells[i * boardSize + j] == 1)
         {
             if (count < 2 || count > 3)
             {
-				new_cells[i * boardSize + j] = 0;
-			}
+                new_cells[i * boardSize + j] = 0;
+            }
             else
             {
-				new_cells[i * boardSize + j] = 1;
-			}
-		}
+                new_cells[i * boardSize + j] = 1;
+            }
+        }
         else
         {
             if (count == 3)
             {
-				new_cells[i * boardSize + j] = 1;
-			}
+                new_cells[i * boardSize + j] = 1;
+            }
             else
             {
-				new_cells[i * boardSize + j] = 0;
-			}
-		}
-	}
+                new_cells[i * boardSize + j] = 0;
+            }
+        }
+    }
 }
 
 void update_board(const unsigned char* cells, unsigned char* new_cells, const unsigned int boardSize)
