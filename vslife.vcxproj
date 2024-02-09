@@ -128,12 +128,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="board_neighbors.cpp" />
+    <ClCompile Include="board_simple.cpp" />
     <ClCompile Include="vslife.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
     <ClInclude Include="kernel.cuh" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="gpuneighbors.cu" />

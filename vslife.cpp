@@ -13,12 +13,12 @@ int main()
     glfwMakeContextCurrent(window);
     glewInit();
 
-    const unsigned int gridSize = 1000;
+    const unsigned int gridSize = 500;
 
     Renderer renderer(gridSize);
     renderer.Initialize();
 
-    Board board(gridSize);
+    NeighborsBoard board(gridSize);
 
     const unsigned int numFrames = 100;
     int frameCount = 0;
@@ -28,9 +28,8 @@ int main()
     {
         auto start = std::chrono::high_resolution_clock::now();
 
-        board.Update(renderer.colors);
-        //board.UpdateOld();
-        //board.DrawOld(renderer.colors);
+        board.Update();
+        board.Draw(renderer.colors);
 
         frameTimes[frameCount % numFrames] = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(std::chrono::high_resolution_clock::now() - start).count();
         if (frameCount++ % 50 == 0)
