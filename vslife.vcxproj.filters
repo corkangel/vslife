@@ -13,32 +13,59 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\cuda">
+      <UniqueIdentifier>{9f8bc310-e911-4709-88d4-a6aa7997cf1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vslife.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="board_cuda_ongpu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="board_cuda_simple.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="board_neighbors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="board_simple.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="board_cuda_neighbors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="board.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="kernel.cuh">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\cuda</Filter>
+    </ClInclude>
+    <ClInclude Include="board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="kernel.cu">
-      <Filter>Source Files</Filter>
+    <CudaCompile Include="cuda_simple.cu">
+      <Filter>Source Files\cuda</Filter>
     </CudaCompile>
-    <CudaCompile Include="ongpu.cu">
-      <Filter>Source Files</Filter>
+    <CudaCompile Include="cuda_neighbors.cu">
+      <Filter>Source Files\cuda</Filter>
     </CudaCompile>
-    <CudaCompile Include="gpuneighbors.cu">
-      <Filter>Source Files</Filter>
+    <CudaCompile Include="cuda_ongpu.cu">
+      <Filter>Source Files\cuda</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

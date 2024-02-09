@@ -51,8 +51,6 @@ __global__ void update_neighbors_kernel(const char* dirty, unsigned char* neighb
 	const unsigned int x = i * 3 + ox;
 	const unsigned int y = j * 3 + oy;
 
-	//printf("i: %d, j: %d, x: %d, y: %d\n", i, j, x, y);
-
 	if (x >= boardSize || y >= boardSize)
 		return;
 
@@ -74,7 +72,6 @@ __global__ void update_neighbors_kernel(const char* dirty, unsigned char* neighb
 					continue;
 				}
 				neighbors[y2 * boardSize + x2] += d;
-				//printf("MODIFY:i,j:(%d,%d) x,y:(%d,%d) x2: %d, y2: %d, offset: %d d: %d\n", i, j, x, y, x2, y2, y2 * boardSize + x2, d);
 			}
 		}
 	}
@@ -164,27 +161,8 @@ void neighbors_update(char* dirty)
 
 	neighbors_update_cell<<<gridSize, blockSize>>>(n_cells, n_cells2, n_dirty, n_neighbors, n_boardSize);
 
-	//update_all_neighbors_kernel << <1, 1 >> > (n_dirty, n_neighbors, n_boardSize);
-
-
-	//const int N = 100;
-	//unsigned char cells[N], cell2[N], neighs[N];
-	//char ds[N];
-	//cudaMemcpy(cells, n_cells, N * sizeof(char), cudaMemcpyDeviceToHost);
-	//cudaMemcpy(cell2, n_cells2, N * sizeof(char), cudaMemcpyDeviceToHost);
-	//cudaMemcpy(ds, n_dirty, N * sizeof(char), cudaMemcpyDeviceToHost);
-	//cudaMemcpy(neighs, n_neighbors, N * sizeof(char), cudaMemcpyDeviceToHost);
-
-	//for (int i = 0; i < N; i++)
-	//{
-	//	printf("x: %d c: %d, c2: %d, d: %d neigh: %d %s\n", i, cells[i], cell2[i], ds[i], neighs[i], cell2[i] - cells[i] == ds[i] ? "OK" : "FAIL");
-	//}
-
-	//count_intitial_neighbors<< <1, 1 >> > (n_cells2, n_neighbors, n_boardSize);
 	cudaMemcpy(n_cells, n_cells2, n_boardSize * n_boardSize * sizeof(unsigned char), cudaMemcpyDeviceToDevice);
 	cudaMemcpy(dirty, n_dirty, n_boardSize * n_boardSize * sizeof(char), cudaMemcpyDeviceToHost);
-
-	//printf("-------------------------------neighbors_update--------------------------------\n");
 
 	dim3 nBlockSize(32, 32);
 	dim3 nGridSize(n_boardSize / 32 / 3+1, n_boardSize / 32 / 3+1);

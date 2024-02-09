@@ -3,6 +3,7 @@
 #include "renderer.h"
 
 #include <cuda_runtime.h>
+#include <chrono>
 
 #include "kernel.cuh"
 
@@ -13,7 +14,7 @@ int main()
     glfwMakeContextCurrent(window);
     glewInit();
 
-    const unsigned int gridSize = 2000;
+    const unsigned int gridSize = 100;
 
     Renderer renderer(gridSize);
     renderer.Initialize();
@@ -29,7 +30,7 @@ int main()
         auto start = std::chrono::high_resolution_clock::now();
 
         board.Update();
-        board.Draw(renderer.colors);
+        board.Draw(renderer.GetColors());
 
         frameTimes[frameCount % numFrames] = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(std::chrono::high_resolution_clock::now() - start).count();
         if (frameCount++ % 50 == 0)

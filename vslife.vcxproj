@@ -132,7 +132,9 @@
     <ClCompile Include="board_cuda_simple.cpp" />
     <ClCompile Include="board_neighbors.cpp" />
     <ClCompile Include="board_simple.cpp" />
-    <ClCompile Include="cuda_neighbors.cpp" />
+    <ClCompile Include="board_cuda_neighbors.cpp" />
+    <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="utils.cpp" />
     <ClCompile Include="vslife.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -142,9 +144,9 @@
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="cud_ongpu.cu" />
+    <CudaCompile Include="cuda_neighbors.cu" />
     <CudaCompile Include="cuda_simple.cu" />
-    <CudaCompile Include="ongpu.cu" />
+    <CudaCompile Include="cuda_ongpu.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
