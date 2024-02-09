@@ -37,5 +37,8 @@
     <CudaCompile Include="ongpu.cu">
       <Filter>Source Files</Filter>
     </CudaCompile>
+    <CudaCompile Include="gpuneighbors.cu">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

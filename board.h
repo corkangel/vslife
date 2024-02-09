@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <omp.h>
 #include "kernel.cuh"
 
 class Board
@@ -39,12 +40,12 @@ public:
 
         //CountNeighbors();
 
-        board_init(&cells[0], gridSize);
+        neighbors_init(&cells[0], gridSize);
     }
 
     ~Board()
     {
-        board_destroy();
+        neighbors_destroy();
     }
 
     void CountNeighbors()
@@ -226,8 +227,9 @@ public:
 
     void Update(std::vector<GLfloat>& colors)
     {
-        board_update(&dirtyCells[0]);
+        neighbors_update(&dirtyCells[0]);
 
+        #pragma omp parallel for
         for (unsigned int n = 0; n < gridSize * gridSize; ++n)
 		{
 			if (dirtyCells[n] == 0)

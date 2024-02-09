@@ -136,6 +136,7 @@
     <ClInclude Include="renderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <CudaCompile Include="gpuneighbors.cu" />
     <CudaCompile Include="kernel.cu" />
     <CudaCompile Include="ongpu.cu" />
   </ItemGroup>
