@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="board_cuda_simple.cpp" />
     <ClCompile Include="board_neighbors.cpp" />
     <ClCompile Include="board_simple.cpp" />
     <ClCompile Include="vslife.cpp" />

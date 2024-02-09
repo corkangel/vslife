@@ -18,7 +18,7 @@ int main()
     Renderer renderer(gridSize);
     renderer.Initialize();
 
-    NeighborsBoard board(gridSize);
+    CudaSimpleBoard board(gridSize);
 
     const unsigned int numFrames = 100;
     int frameCount = 0;

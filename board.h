@@ -295,13 +295,12 @@ public:
     void UpdateNeighbors();
 };
 
-class SimpleCudaBoard : public Board
+class CudaSimpleBoard : public Board
 {
-	std::vector<uint8> cells;
 	std::vector<uint8> cells2;
 
   public:
-	  SimpleCudaBoard(const uint32 boardSize);
+      CudaSimpleBoard(const uint32 boardSize);
 
 	  void Update() override;
 	  void Draw(std::vector<GLfloat>& colors) override;
