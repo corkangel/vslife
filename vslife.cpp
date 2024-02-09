@@ -13,12 +13,12 @@ int main()
     glfwMakeContextCurrent(window);
     glewInit();
 
-    const unsigned int gridSize = 500;
+    const unsigned int gridSize = 2000;
 
     Renderer renderer(gridSize);
     renderer.Initialize();
 
-    CudaSimpleBoard board(gridSize);
+    CudaNeighborsBoard board(gridSize);
 
     const unsigned int numFrames = 100;
     int frameCount = 0;

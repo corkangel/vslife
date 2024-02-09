@@ -3,8 +3,6 @@
 
 #include "kernel.cuh"
 
-#include <cassert>
-
 CudaSimpleBoard::CudaSimpleBoard(const uint32 boardSize) : Board(boardSize)
 {
 	cells2.resize(boardSize * boardSize);
