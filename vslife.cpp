@@ -14,7 +14,7 @@ int main()
     glfwMakeContextCurrent(window);
     glewInit();
 
-    const unsigned int gridSize = 500;
+    const unsigned int gridSize = 1000;
 
     Renderer renderer(gridSize);
     renderer.Initialize();

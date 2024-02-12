@@ -188,7 +188,10 @@ void interop_init(unsigned char* initialCells, const unsigned int boardSize)
 void interop_reupload(unsigned char* uploadCells, float* colorsPtr)
 {
     cudaMemcpy(interop_uploadCells, uploadCells, interop_boardSize * interop_boardSize * sizeof(unsigned char), cudaMemcpyHostToDevice);
-    interop_merge_cells<<<interop_boardSize / 16 + 1, interop_boardSize / 16 + 1>>>(interop_cells, interop_cells2, interop_uploadCells, interop_boardSize, colorsPtr);
+
+    dim3 blockSize(16, 16);
+    dim3 gridSize(interop_boardSize / 16 + 1, interop_boardSize / 16 + 1);
+    interop_merge_cells<<<gridSize, blockSize>>>(interop_cells, interop_cells2, interop_uploadCells, interop_boardSize, colorsPtr);
 
     cudaMemset(interop_neighbors, 0, interop_boardSize * interop_boardSize * sizeof(unsigned char));
     interop_count_intitial_neighbors << <1, 1 >> > (interop_cells, interop_neighbors, interop_boardSize);
