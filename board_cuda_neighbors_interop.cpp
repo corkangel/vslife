@@ -7,6 +7,27 @@
 
 #include <cuda_gl_interop.h>
 
+
+static void interop_map(cudaGraphicsResource* cudaColorResource, void** colorsDevicePtr)
+{
+	cudaError e;
+
+	e = cudaGraphicsMapResources(1, &cudaColorResource, 0);
+	assert(e == cudaSuccess);
+
+	size_t sz = 0;
+	e = cudaGraphicsResourceGetMappedPointer(colorsDevicePtr, &sz, cudaColorResource);
+	assert(e == cudaSuccess);
+}
+
+static void interop_unmap(cudaGraphicsResource* cudaColorResource)
+{
+    cudaError e;
+
+    e = cudaGraphicsUnmapResources(1, &cudaColorResource, 0);
+    assert(e == cudaSuccess);
+}
+
 CudaNeighborsGlInteropBoard::CudaNeighborsGlInteropBoard(const uint32 boardSize, const uint32 VBOcolors) : Board(boardSize), VBOcolors(VBOcolors)
 {
 	dirtyCells.resize(boardSize * boardSize);
@@ -25,50 +46,21 @@ CudaNeighborsGlInteropBoard::~CudaNeighborsGlInteropBoard()
 
 void CudaNeighborsGlInteropBoard::Update()
 {
-	cudaError e;
-	
-	e = cudaGraphicsMapResources(1, &cudaColorResource, 0);
-	assert(e == cudaSuccess);
-
-	void* colorsDevicePtr;
-	size_t sz = 0;
-	cudaGraphicsResourceGetMappedPointer(&colorsDevicePtr, &sz, cudaColorResource);
-
-	interop_update(&dirtyCells[0], (float*)colorsDevicePtr);
-
-	e = cudaGraphicsUnmapResources(1, &cudaColorResource, 0);
-	assert(e == cudaSuccess);
+	void* colorsDevicePtr = nullptr;
+	interop_map(cudaColorResource, &colorsDevicePtr);
+	interop_update((float*)colorsDevicePtr);
+	interop_unmap(cudaColorResource);
 }
 
 void CudaNeighborsGlInteropBoard::Draw(std::vector<GLfloat>& colors)
 {
-	//#pragma omp parallel for
-	//for (unsigned int n = 0; n < boardSize * boardSize; ++n)
-	//{
-	//	if (dirtyCells[n] == 0)
-	//		continue;
-
-	//	const unsigned int pos = n * 4;
-	//	GLfloat value = (dirtyCells[n] == 1) ? 1.0f : 0.0f;
-	//	colors[pos] = value;
-	//	colors[pos + 1] = value;
-	//	colors[pos + 2] = value;
-	//	colors[pos + 3] = value;
-	//}
+	// empty - GL interop updates the color buffer directly
 }
+
 void CudaNeighborsGlInteropBoard::Reupload()
 {
-	cudaError e;
-
-	e = cudaGraphicsMapResources(1, &cudaColorResource, 0);
-	assert(e == cudaSuccess);
-
-	void* colorsDevicePtr;
-	size_t sz = 0;
-	cudaGraphicsResourceGetMappedPointer(&colorsDevicePtr, &sz, cudaColorResource);
-
+	void* colorsDevicePtr = nullptr;
+	interop_map(cudaColorResource, &colorsDevicePtr);
 	interop_reupload(&cells[0], (float*)colorsDevicePtr);
-
-	e = cudaGraphicsUnmapResources(1, &cudaColorResource, 0);
-	assert(e == cudaSuccess);
+	interop_unmap(cudaColorResource);
 }

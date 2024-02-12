@@ -194,7 +194,7 @@ void interop_reupload(unsigned char* uploadCells, float* colorsPtr)
     interop_count_intitial_neighbors << <1, 1 >> > (interop_cells, interop_neighbors, interop_boardSize);
 }
 
-void interop_update(char* dirty, float* colorsDevicePtr)
+void interop_update(float* colorsDevicePtr)
 {
     cudaMemset(interop_dirty, 0, interop_boardSize * interop_boardSize * sizeof(char));
 
@@ -204,7 +204,6 @@ void interop_update(char* dirty, float* colorsDevicePtr)
     interop_update_cell<<<gridSize, blockSize>>>(interop_cells, interop_cells2, interop_dirty, interop_neighbors, interop_boardSize, colorsDevicePtr);
 
     cudaMemcpy(interop_cells, interop_cells2, interop_boardSize * interop_boardSize * sizeof(unsigned char), cudaMemcpyDeviceToDevice);
-    //cudaMemcpy(dirty, interop_dirty, interop_boardSize * interop_boardSize * sizeof(char), cudaMemcpyDeviceToHost);
 
     dim3 nBlockSize(32, 32);
     dim3 nGridSize(interop_boardSize / 32 / 3+1, interop_boardSize / 32 / 3+1);
