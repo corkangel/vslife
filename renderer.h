@@ -21,18 +21,22 @@ public:
     void Cleanup();
 
     std::vector<GLfloat>& GetColors() { return colors; }
+    unsigned int GetColorVBO() { return VBOcolors; }
+    void SetUpdateColorBuffer(bool value) { updateColorBuffer = value; }
 
     void HandleKeyInput(GLFWwindow* window);
 
 protected:
 
     void ApplyCameraTransform();
+    void UpdateColorBuffer();
     GLuint MakeShaderProgram(const char* vertexShaderSource, const char* fragmentShaderSource);
 
     unsigned int VAO;
     unsigned int EBO;
     unsigned int VBOverts, VBOcolors;
     GLuint shaderProgram;
+    bool updateColorBuffer = true;
 
     const int gridSize;
     std::vector<GLfloat> vertices;

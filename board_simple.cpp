@@ -5,10 +5,10 @@
 Board::Board(const uint32 boardSize) : boardSize(boardSize)
 {
 	cells.resize(boardSize * boardSize);
-	FillRandom(cells);
+	FillRandom();
 }
 
-void Board::FillRandom(std::vector<uint8>& cells)
+void Board::FillRandom()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());

@@ -13,3 +13,8 @@ void neighbors_update(char* dirty);
 void neighbors_destroy();
 
 
+// Neighbors Interop
+void interop_init(unsigned char* initialCells, const unsigned int boardSize);
+void interop_update(char* dirty, float* colorsDevicePtr);
+void interop_reupload(unsigned char* newCells, float* colorsDevicePtr);
+void interop_destroy();

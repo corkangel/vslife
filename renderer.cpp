@@ -133,14 +133,21 @@ void Renderer::Initialize()
     glBindVertexArray(0);
 }
 
+void Renderer::UpdateColorBuffer()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, VBOcolors);
+    glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLfloat), &colors[0], GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void Renderer::Draw()
 {
     ApplyCameraTransform();
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBOcolors);
-    glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLfloat), &colors[0], GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+    if (updateColorBuffer) {
+        UpdateColorBuffer();
+    }
+    
     glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, GLsizei(indices.size()), GL_UNSIGNED_INT, 0);

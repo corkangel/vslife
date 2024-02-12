@@ -17,9 +17,9 @@ public:
 
     virtual void Update() = 0;
     virtual void Draw(std::vector<GLfloat>& colors) = 0;
+    virtual void Reupload() { }
+    void FillRandom();
 
-protected:
-    void FillRandom(std::vector<uint8>& cells);
 };
 
 
@@ -81,6 +81,7 @@ public:
 
 // Optimized implementation using neighbor counts, using CUDA on GPU.
 // Board lives on the GPU, and a dirty list is copied back to the CPU each frame.
+
 class CudaNeighborsBoard : public Board
 {
     std::vector<int8> dirtyCells;
@@ -91,4 +92,23 @@ public:
 
 	void Update() override;
 	void Draw(std::vector<GLfloat>& colors) override;
+};
+
+
+// CudaNeighborsBoard but updating the color buffer on the GPU directly from cuda.
+// No copying back to the CPU
+struct cudaGraphicsResource;
+class CudaNeighborsGlInteropBoard : public Board
+{
+    std::vector<int8> dirtyCells;
+    const uint32 VBOcolors;
+    struct cudaGraphicsResource* cudaColorResource;
+
+public:
+    CudaNeighborsGlInteropBoard(const uint32 boardSize, const uint32 VBOcolors);
+    ~CudaNeighborsGlInteropBoard();
+
+    void Update() override;
+    void Draw(std::vector<GLfloat>& colors) override;
+    void Reupload() override;
 };

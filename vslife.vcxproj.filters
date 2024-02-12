@@ -42,6 +42,9 @@
     <ClCompile Include="renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="board_cuda_neighbors_interop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils.h">
@@ -65,6 +68,9 @@
       <Filter>Source Files\cuda</Filter>
     </CudaCompile>
     <CudaCompile Include="cuda_ongpu.cu">
+      <Filter>Source Files\cuda</Filter>
+    </CudaCompile>
+    <CudaCompile Include="cuda_meighbors_interop.cu">
       <Filter>Source Files\cuda</Filter>
     </CudaCompile>
   </ItemGroup>

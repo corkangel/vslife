@@ -14,12 +14,15 @@ int main()
     glfwMakeContextCurrent(window);
     glewInit();
 
-    const unsigned int gridSize = 100;
+    const unsigned int gridSize = 500;
 
     Renderer renderer(gridSize);
     renderer.Initialize();
 
-    CudaNeighborsBoard board(gridSize);
+    //CudaNeighborsBoard board(gridSize);
+
+    CudaNeighborsGlInteropBoard board(gridSize, renderer.GetColorVBO());
+    renderer.SetUpdateColorBuffer(false);
 
     const unsigned int numFrames = 100;
     int frameCount = 0;
@@ -50,6 +53,12 @@ int main()
         {
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
 		}
+
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        {
+            board.FillRandom();
+            board.Reupload();
+        }
 
         renderer.HandleKeyInput(window);
     }
