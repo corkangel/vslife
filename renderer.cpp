@@ -37,14 +37,14 @@ void Renderer::HandleKeyInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
     {
         // Zoom in by scaling the camera transform
-        cameraTransform = glm::scale(cameraTransform, glm::vec3(1.1f, 1.1f, 1.1f));
+        cameraTransform = glm::scale(cameraTransform, glm::vec3(1.01f, 1.01f, 1.01f));
     }
 
     // Check if the '-' key is pressed
     if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
     {
         // Zoom out by scaling the camera transform
-        cameraTransform = glm::scale(cameraTransform, glm::vec3(0.9f, 0.9f, 0.9f));
+        cameraTransform = glm::scale(cameraTransform, glm::vec3(0.99f, 0.99f, 0.99f));
     }
 }
 

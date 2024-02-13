@@ -19,7 +19,7 @@ public:
     virtual void Draw(std::vector<GLfloat>& colors) = 0;
     virtual void Reupload() { }
     void FillRandom();
-
+    void RandomSpaceships(const uint32 num);
 };
 
 
