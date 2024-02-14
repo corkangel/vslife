@@ -14,11 +14,13 @@ int main()
     glfwMakeContextCurrent(window);
     glewInit();
 
-    const unsigned int gridSize = 1000;
+    const unsigned int gridSize = 2000;
 
     Renderer renderer(gridSize);
     renderer.Initialize();
 
+    //NeighborsBoard board(gridSize);
+    //CudaOnGpuBoard board(gridSize);
     //CudaNeighborsBoard board(gridSize);
 
     CudaNeighborsGlInteropBoard board(gridSize, renderer.GetColorVBO());

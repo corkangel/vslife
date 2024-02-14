@@ -102,7 +102,7 @@ void add_beacon(std::vector<uint8>& cells, int x, int y, uint32 boardSize)
 Board::Board(const uint32 boardSize) : boardSize(boardSize)
 {
 	cells.resize(boardSize * boardSize);
-	RandomSpaceships(boardSize);
+	RandomSpaceships(boardSize*4);
 }
 
 void Board::FillRandom()

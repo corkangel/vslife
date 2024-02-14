@@ -12,6 +12,9 @@ unsigned char* interop_neighbors;
 char* interop_dirty;
 unsigned int interop_boardSize;
 
+const int numCellsPerIteration = 64;
+const int sliceSize = 9;
+
 __global__ void interop_count_intitial_neighbors(unsigned char* cells, unsigned char* neighbors, unsigned int boardSize)
 {
     for (unsigned int i = 0; i < boardSize; i++)
@@ -44,13 +47,13 @@ __global__ void interop_count_intitial_neighbors(unsigned char* cells, unsigned 
 }
 
 
-__global__ void update_interop_kernel(const char* dirty, unsigned char* neighbors, const unsigned int boardSize, const unsigned int ox, const unsigned int oy)
+__global__ void interop_update_neighbors_kernel(const char* dirty, unsigned char* neighbors, const unsigned int boardSize, const unsigned int ox, const unsigned int oy)
 {
     const int i = blockIdx.x * blockDim.x + threadIdx.x;
     const int j = blockIdx.y * blockDim.y + threadIdx.y;
 
-    const unsigned int x = i * 3 + ox;
-    const unsigned int y = j * 3 + oy;
+    const unsigned int x = i * sliceSize + ox;
+    const unsigned int y = j * sliceSize + oy;
 
     if (x >= boardSize || y >= boardSize)
         return;
@@ -114,36 +117,44 @@ __global__ void interop_update_cell(unsigned char* cells, unsigned char* cells2,
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
-    if (x >= boardSize || y >= boardSize)
+    if (y >= boardSize)
         return;
 
-    int index = y * boardSize + x;
-    int numNeighbors = neighbors[index];
-    if (cells[index] == 1)
-    {
-        if (numNeighbors < 2 || numNeighbors > 3)
-        {
-            cells2[index] = 0;
-            dirty[index] = -1;
+    x *= numCellsPerIteration;
 
-            colorsPtr[index * 4] = 0.0f;
-            colorsPtr[index * 4 + 1] = 0.0f;
-            colorsPtr[index * 4 + 2] = 0.0f;
-            colorsPtr[index * 4 + 3] = 0.0f;
+    for (int t = 0; t < numCellsPerIteration; t++)
+    {
+        if (x + t >= boardSize)
+            return;
+
+        int index = y * boardSize + x + t;
+        int numNeighbors = neighbors[index];
+        if (cells[index] == 1)
+        {
+            if (numNeighbors < 2 || numNeighbors > 3)
+            {
+                cells2[index] = 0;
+                dirty[index] = -1;
+
+                colorsPtr[index * 4] = 0.0f;
+                colorsPtr[index * 4 + 1] = 0.0f;
+                colorsPtr[index * 4 + 2] = 0.0f;
+                colorsPtr[index * 4 + 3] = 0.0f;
+            }
         }
-    }
-    else
-    {
-        if (numNeighbors == 3)
+        else
         {
-            cells2[index] = 1;
+            if (numNeighbors == 3)
+            {
+                cells2[index] = 1;
 
-            colorsPtr[index * 4] = 1.0f;
-            colorsPtr[index * 4 + 1] = 1.0f;
-            colorsPtr[index * 4 + 2] = 1.0f;
-            colorsPtr[index * 4 + 3] = 1.0f;
-                
-            dirty[index] = 1;
+                colorsPtr[index * 4] = 1.0f;
+                colorsPtr[index * 4 + 1] = 1.0f;
+                colorsPtr[index * 4 + 2] = 1.0f;
+                colorsPtr[index * 4 + 3] = 1.0f;
+
+                dirty[index] = 1;
+            }
         }
     }
 }
@@ -204,25 +215,22 @@ void interop_update(float* colorsDevicePtr)
     const int N = 32;
 
     dim3 blockSize(N, N);
-    dim3 gridSize(interop_boardSize / N + 1, interop_boardSize / N + 1);
+    dim3 gridSize(interop_boardSize / (N* numCellsPerIteration) + 1, interop_boardSize / N + 1);
 
     interop_update_cell<<<gridSize, blockSize>>>(interop_cells, interop_cells2, interop_dirty, interop_neighbors, interop_boardSize, colorsDevicePtr);
 
     cudaMemcpy(interop_cells, interop_cells2, interop_boardSize * interop_boardSize * sizeof(unsigned char), cudaMemcpyDeviceToDevice);
 
     dim3 nBlockSize(N, N);
-    dim3 nGridSize(interop_boardSize / N / 3+1, interop_boardSize / N / 3+1);
+    dim3 nGridSize(interop_boardSize / N / sliceSize + 1, interop_boardSize / N / sliceSize + 1);
 
-    update_interop_kernel<<<nBlockSize, nGridSize>>>(interop_dirty, interop_neighbors, interop_boardSize, 0, 0);
-    update_interop_kernel<<<nBlockSize, nGridSize>>>(interop_dirty, interop_neighbors, interop_boardSize, 0, 1);
-    update_interop_kernel<<<nBlockSize, nGridSize>>>(interop_dirty, interop_neighbors, interop_boardSize, 1, 0);
-    update_interop_kernel<<<nBlockSize, nGridSize>>>(interop_dirty, interop_neighbors, interop_boardSize, 1, 1);
-    update_interop_kernel<<<nBlockSize, nGridSize>>>(interop_dirty, interop_neighbors, interop_boardSize, 2, 0);
-    update_interop_kernel<<<nBlockSize, nGridSize>>>(interop_dirty, interop_neighbors, interop_boardSize, 0, 2);
-    update_interop_kernel<<<nBlockSize, nGridSize>>>(interop_dirty, interop_neighbors, interop_boardSize, 2, 1);
-    update_interop_kernel<<<nBlockSize, nGridSize>>>(interop_dirty, interop_neighbors, interop_boardSize, 1, 2);
-    update_interop_kernel<<<nBlockSize, nGridSize>>>(interop_dirty, interop_neighbors, interop_boardSize, 2, 2);
-
+    for (int y = 0; y < sliceSize; y++)
+    {
+        for (int x = 0; x < sliceSize; x++)
+        {
+            interop_update_neighbors_kernel<<<nBlockSize, nGridSize>>>(interop_dirty, interop_neighbors, interop_boardSize, x, y);
+        }
+    }
 }
 
 void interop_destroy()
