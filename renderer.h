@@ -25,6 +25,7 @@ public:
     void SetUpdateColorBuffer(bool value) { updateColorBuffer = value; }
 
     void HandleKeyInput(GLFWwindow* window);
+    glm::vec2 GetCameraFocus(); // Pbcca
 
 protected:
 

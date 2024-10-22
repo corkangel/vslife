@@ -189,3 +189,7 @@ void Renderer::Cleanup()
     glDeleteBuffers(1, &EBO);
 }
 
+glm::vec2 Renderer::GetCameraFocus() {
+    glm::vec3 cameraPosition = glm::vec3(cameraTransform[3]);
+    return glm::vec2(cameraPosition.x, cameraPosition.y);
+}

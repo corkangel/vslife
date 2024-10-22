@@ -20,6 +20,7 @@ public:
     virtual void Reupload() { }
     void FillRandom();
     void RandomSpaceships(const uint32 num);
+    void AddSpaceshipsAt(uint32 x, uint32 y); // Pbd57
 };
 
 

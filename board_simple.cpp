@@ -132,6 +132,14 @@ void Board::RandomSpaceships(const uint32 num)
     }
 }
 
+void Board::AddSpaceshipsAt(uint32 x, uint32 y)
+{
+    for (unsigned int n = 0; n < 64; ++n)
+    {
+        add_spaceship(cells, x, y, boardSize);
+    }
+}
+
 SimpleBoard::SimpleBoard(const uint32 boardSize) : Board(boardSize)
 {
 	cells2.resize(boardSize * boardSize);

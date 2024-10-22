@@ -1,4 +1,3 @@
-
 #include "board.h"
 #include "renderer.h"
 
@@ -58,7 +57,8 @@ int main()
 
         if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
         {
-            board.FillRandom();
+            glm::vec2 cameraFocus = renderer.GetCameraFocus();
+            board.AddSpaceshipsAt(static_cast<uint32>(cameraFocus.x), static_cast<uint32>(cameraFocus.y));
             board.Reupload();
         }
 
