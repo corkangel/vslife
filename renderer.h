@@ -45,4 +45,3 @@ protected:
 
     glm::mat4 cameraTransform;
 };
-

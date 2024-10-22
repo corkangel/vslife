@@ -46,6 +46,34 @@ void Renderer::HandleKeyInput(GLFWwindow* window)
         // Zoom out by scaling the camera transform
         cameraTransform = glm::scale(cameraTransform, glm::vec3(0.99f, 0.99f, 0.99f));
     }
+
+    // Check if the 'W' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        // Move the camera up
+        cameraTransform = glm::translate(cameraTransform, glm::vec3(0.0f, 0.01f, 0.0f));
+    }
+
+    // Check if the 'A' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        // Move the camera left
+        cameraTransform = glm::translate(cameraTransform, glm::vec3(-0.01f, 0.0f, 0.0f));
+    }
+
+    // Check if the 'S' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        // Move the camera down
+        cameraTransform = glm::translate(cameraTransform, glm::vec3(0.0f, -0.01f, 0.0f));
+    }
+
+    // Check if the 'D' key is pressed
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        // Move the camera right
+        cameraTransform = glm::translate(cameraTransform, glm::vec3(0.01f, 0.0f, 0.0f));
+    }
 }
 
 void Renderer::ApplyCameraTransform()
@@ -160,5 +188,4 @@ void Renderer::Cleanup()
     glDeleteBuffers(1, &VBOcolors);
     glDeleteBuffers(1, &EBO);
 }
-
 
