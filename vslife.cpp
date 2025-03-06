@@ -18,7 +18,9 @@ int main()
     Renderer renderer(gridSize);
     renderer.Initialize();
 
+    //SimpleBoard board(gridSize);
     //NeighborsBoard board(gridSize);
+    //CudaSimpleBoard board(gridSize);
     //CudaOnGpuBoard board(gridSize);
     //CudaNeighborsBoard board(gridSize);
 
@@ -40,7 +42,7 @@ int main()
         if (frameCount++ % 50 == 0)
         {
             const float avg = std::accumulate(frameTimes.begin(), frameTimes.end(), 0.0f) / numFrames;
-            printf("Time: %u %.2f FPS\n", frameCount, 1000 / avg);
+            printf("Time: %u %.2f FPS  %.3f MS\n", frameCount, 1000 / avg, avg);
         }
 
         glClear(GL_COLOR_BUFFER_BIT);
@@ -52,8 +54,8 @@ int main()
         // handle keyboard event
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         {
-			glfwSetWindowShouldClose(window, GLFW_TRUE);
-		}
+            glfwSetWindowShouldClose(window, GLFW_TRUE);
+        }
 
         if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
         {

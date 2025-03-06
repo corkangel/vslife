@@ -136,10 +136,11 @@ __global__ void interop_update_cell(unsigned char* cells, unsigned char* cells2,
                 cells2[index] = 0;
                 dirty[index] = -1;
 
-                colorsPtr[index * 4] = 0.0f;
-                colorsPtr[index * 4 + 1] = 0.0f;
-                colorsPtr[index * 4 + 2] = 0.0f;
-                colorsPtr[index * 4 + 3] = 0.0f;
+                const int index4 = index * 4;
+                colorsPtr[index4] = 0.0f;
+                colorsPtr[index4 + 1] = 0.0f;
+                colorsPtr[index4 + 2] = 0.0f;
+                colorsPtr[index4 + 3] = 0.0f;
             }
         }
         else
@@ -148,10 +149,11 @@ __global__ void interop_update_cell(unsigned char* cells, unsigned char* cells2,
             {
                 cells2[index] = 1;
 
-                colorsPtr[index * 4] = 1.0f;
-                colorsPtr[index * 4 + 1] = 1.0f;
-                colorsPtr[index * 4 + 2] = 1.0f;
-                colorsPtr[index * 4 + 3] = 1.0f;
+                const int index4 = index * 4;
+                colorsPtr[index4] = 1.0f;
+                colorsPtr[index4 + 1] = 1.0f;
+                colorsPtr[index4 + 2] = 1.0f;
+                colorsPtr[index4 + 3] = 1.0f;
 
                 dirty[index] = 1;
             }
@@ -215,13 +217,15 @@ void interop_update(float* colorsDevicePtr)
     const int N = 32;
 
     dim3 blockSize(N, N);
-    dim3 gridSize(interop_boardSize / (N* numCellsPerIteration) + 1, interop_boardSize / N + 1);
+    dim3 gridSize(interop_boardSize / (N * numCellsPerIteration) + 1, interop_boardSize / N + 1);
 
     interop_update_cell<<<gridSize, blockSize>>>(interop_cells, interop_cells2, interop_dirty, interop_neighbors, interop_boardSize, colorsDevicePtr);
 
     cudaMemcpy(interop_cells, interop_cells2, interop_boardSize * interop_boardSize * sizeof(unsigned char), cudaMemcpyDeviceToDevice);
 
-    dim3 nBlockSize(N, N);
+
+    const int M = 64;
+    dim3 nBlockSize(M, M);
     dim3 nGridSize(interop_boardSize / N / sliceSize + 1, interop_boardSize / N / sliceSize + 1);
 
     for (int y = 0; y < sliceSize; y++)

@@ -156,16 +156,18 @@ void neighbors_update(char* dirty)
 {
     cudaMemset(n_dirty, 0, n_boardSize * n_boardSize * sizeof(char));
 
-    dim3 blockSize(16, 16);
-    dim3 gridSize(n_boardSize / 16 + 1, n_boardSize / 16 + 1);
+    const int M = 16;
+    dim3 blockSize(M, M);
+    dim3 gridSize(n_boardSize / M + 1, n_boardSize / M + 1);
 
-    neighbors_update_cell<<<gridSize, blockSize>>>(n_cells, n_cells2, n_dirty, n_neighbors, n_boardSize);
+    neighbors_update_cell << <gridSize, blockSize >> > (n_cells, n_cells2, n_dirty, n_neighbors, n_boardSize);
 
     cudaMemcpy(n_cells, n_cells2, n_boardSize * n_boardSize * sizeof(unsigned char), cudaMemcpyDeviceToDevice);
     cudaMemcpy(dirty, n_dirty, n_boardSize * n_boardSize * sizeof(char), cudaMemcpyDeviceToHost);
 
-    dim3 nBlockSize(32, 32);
-    dim3 nGridSize(n_boardSize / 32 / 3+1, n_boardSize / 32 / 3+1);
+    const int N = 64;
+    dim3 nBlockSize(N, N);
+    dim3 nGridSize(n_boardSize / N / 3 + 1, n_boardSize / N / 3 + 1);
 
     update_neighbors_kernel<<<nBlockSize, nGridSize>>>(n_dirty, n_neighbors, n_boardSize, 0, 0);
     update_neighbors_kernel<<<nBlockSize, nGridSize>>>(n_dirty, n_neighbors, n_boardSize, 0, 1);
